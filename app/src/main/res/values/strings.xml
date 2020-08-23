@@ -1,4 +1,4 @@
 <resources>
-    <string name="app_name">KotlinWeather</string>
+    <string name="app_name">天气助手</string>
     <string name="edit_text_hint_text">输入地址</string>
 </resources>

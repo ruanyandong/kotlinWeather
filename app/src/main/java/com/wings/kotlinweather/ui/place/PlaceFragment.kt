@@ -1,5 +1,6 @@
 package com.wings.kotlinweather.ui.place
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,7 +11,10 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.wings.kotlinweather.MainActivity
 import com.wings.kotlinweather.R
+import com.wings.kotlinweather.WeatherApp
+import com.wings.kotlinweather.ui.weather.WeatherActivity
 import kotlinx.android.synthetic.main.fragment_place.*
 
 /**
@@ -24,7 +28,7 @@ import kotlinx.android.synthetic.main.fragment_place.*
  */
 class PlaceFragment : Fragment(){
 
-    private val mViewModel by lazy { ViewModelProviders.of(this).get(PlaceViewModel::class.java) }
+     val mViewModel by lazy { ViewModelProviders.of(this).get(PlaceViewModel::class.java) }
 
     private lateinit var mAdapter: PlaceAdapter
 
@@ -40,6 +44,17 @@ class PlaceFragment : Fragment(){
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        if (activity is MainActivity && mViewModel.isPlaceSaved()){
+            val place = mViewModel.getSavedPlace()
+            val intent = Intent(context,WeatherActivity::class.java).apply {
+                putExtra("location_lng",place.location.lng)
+                putExtra("location_lat",place.location.lat)
+                putExtra("place_name",place.name)
+            }
+            startActivity(intent)
+            activity?.finish()
+            return
+        }
         val layoutManager = LinearLayoutManager(activity)
         recyclerView.layoutManager = layoutManager
         mAdapter = PlaceAdapter(this,mViewModel.placeList)
